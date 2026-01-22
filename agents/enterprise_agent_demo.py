@@ -38,8 +38,14 @@ async def demo_enterprise_scenario(kernel: Kernel):
     chat_history = ChatHistory()
     chat_history.add_user_message(scenario)
 
-    async for message in agent.invoke(chat_history):
-        result = message.content
+    response_chunks = []
+    async for chunk in agent.invoke_stream(messages=chat_history):
+        if chunk.content:
+            response_chunks.append(chunk.content.content)
+            print(chunk.content, end="", flush=True)
+    
+    print("\n")
+    result = "".join(response_chunks)
 
     print(f"\nOrder Processing Complete!")
     print(f"Result: {result}")

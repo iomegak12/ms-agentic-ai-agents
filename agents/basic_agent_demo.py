@@ -38,8 +38,14 @@ async def demo_basic_agent(kernel: Kernel):
     chat_history = ChatHistory()
     chat_history.add_user_message(goal)
 
-    async for message in agent.invoke(chat_history):
-        print(f"Final Result: {message.content}\n")
+    response_chunks = []
+    async for chunk in agent.invoke_stream(messages=chat_history):
+        if chunk.content:
+            response_chunks.append(chunk.content.content)
+            print(chunk.content, end="", flush=True)
+    
+    print("\n")
+    full_response = "".join(response_chunks)
 
     # Example 2: Text processing chain
     print("\nExample 2: Text transformation chain")
@@ -52,5 +58,11 @@ async def demo_basic_agent(kernel: Kernel):
     chat_history = ChatHistory()
     chat_history.add_user_message(goal)
 
-    async for message in agent.invoke(chat_history):
-        print(f"Final Result: {message.content}\n")
+    response_chunks = []
+    async for chunk in agent.invoke_stream(messages=chat_history):
+        if chunk.content:
+            response_chunks.append(chunk.content.content)
+            print(chunk.content, end="", flush=True)
+    
+    print("\n")
+    full_response = "".join(response_chunks)

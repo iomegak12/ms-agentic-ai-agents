@@ -40,8 +40,14 @@ async def demo_reasoning_agent(kernel: Kernel):
     chat_history = ChatHistory()
     chat_history.add_user_message(question)
 
-    async for message in agent.invoke(chat_history):
-        print(f"\nFinal Answer: {message.content}\n")
+    response_chunks = []
+    async for chunk in agent.invoke_stream(messages=chat_history):
+        if chunk.content:
+            response_chunks.append(chunk.content.content)
+            print(chunk.content, end="", flush=True)
+    
+    print("\n")
+    full_response = "".join(response_chunks)
 
     # Example 2: Data analysis scenario
     print("\nExample 2: Calculate average and format")
@@ -54,5 +60,11 @@ async def demo_reasoning_agent(kernel: Kernel):
     chat_history = ChatHistory()
     chat_history.add_user_message(question)
 
-    async for message in agent.invoke(chat_history):
-        print(f"\nFinal Answer: {message.content}\n")
+    response_chunks = []
+    async for chunk in agent.invoke_stream(messages=chat_history):
+        if chunk.content:
+            response_chunks.append(chunk.content.content)
+            print(chunk.content, end="", flush=True)
+    
+    print("\n")
+    full_response = "".join(response_chunks)

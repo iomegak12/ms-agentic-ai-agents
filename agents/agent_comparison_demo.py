@@ -36,8 +36,14 @@ async def demo_agent_comparison(kernel: Kernel):
 
     chat_history = ChatHistory()
     chat_history.add_user_message(task)
-    async for message in agent1.invoke(chat_history):
-        print(f"Result: {message.content}\n")
+    response_chunks = []
+    async for chunk in agent1.invoke_stream(messages=chat_history):
+        if chunk.content:
+            response_chunks.append(chunk.content.content)
+            print(chunk.content, end="", flush=True)
+    
+    print("\n")
+    full_response = "".join(response_chunks)
 
     # Using Detailed Agent
     print("\nApproach 2: Detailed Reasoning Agent")
@@ -50,5 +56,11 @@ async def demo_agent_comparison(kernel: Kernel):
 
     chat_history = ChatHistory()
     chat_history.add_user_message(task)
-    async for message in agent2.invoke(chat_history):
-        print(f"Result: {message.content}\n")
+    response_chunks = []
+    async for chunk in agent2.invoke_stream(messages=chat_history):
+        if chunk.content:
+            response_chunks.append(chunk.content.content)
+            print(chunk.content, end="", flush=True)
+    
+    print("\n")
+    full_response = "".join(response_chunks)
