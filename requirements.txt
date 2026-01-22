@@ -1,0 +1,7 @@
+semantic-kernel
+semantic-kernel[azure, mongo]
+asyncio
+python-dotenv
+ipykernel
+chromadb
+pysqlite3-binary
